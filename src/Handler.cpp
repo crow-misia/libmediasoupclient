@@ -171,7 +171,7 @@ namespace mediasoupclient
 	};
 
 	SendHandler::SendResult SendHandler::Send(
-	  webrtc::MediaStreamTrackInterface* track,
+	  webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 	  std::vector<webrtc::RtpEncodingParameters>* encodings,
 	  const json* codecOptions,
 	  const json* codec)
@@ -398,7 +398,7 @@ namespace mediasoupclient
 		// This will fill sctpStreamParameters's missing fields with default values.
 		ortc::validateSctpStreamParameters(sctpStreamParameters);
 
-		rtc::scoped_refptr<webrtc::DataChannelInterface> webrtcDataChannel =
+		webrtc::scoped_refptr<webrtc::DataChannelInterface> webrtcDataChannel =
 		  this->pc->CreateDataChannel(label, &dataChannelInit);
 
 		// Increase next id.
@@ -487,7 +487,7 @@ namespace mediasoupclient
 		this->pc->SetRemoteDescription(PeerConnection::SdpType::ANSWER, answer);
 	}
 
-	void SendHandler::ReplaceTrack(const std::string& localId, webrtc::MediaStreamTrackInterface* track)
+	void SendHandler::ReplaceTrack(const std::string& localId, webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track)
 	{
 		MSC_TRACE();
 
@@ -503,7 +503,7 @@ namespace mediasoupclient
 
 		auto transceiver = localIdIt->second;
 
-		transceiver->sender()->SetTrack(track);
+		transceiver->sender()->SetTrack(track.get());
 	}
 
 	void SendHandler::SetMaxSpatialLayer(const std::string& localId, uint8_t spatialLayer)
@@ -731,7 +731,7 @@ namespace mediasoupclient
 		// This will fill sctpStreamParameters's missing fields with default values.
 		ortc::validateSctpStreamParameters(sctpStreamParameters);
 
-		rtc::scoped_refptr<webrtc::DataChannelInterface> webrtcDataChannel =
+		webrtc::scoped_refptr<webrtc::DataChannelInterface> webrtcDataChannel =
 		  this->pc->CreateDataChannel(label, &dataChannelInit);
 
 		// If this is the first DataChannel we need to create the SDP answer with
@@ -783,7 +783,7 @@ namespace mediasoupclient
 		if (localIdIt == this->mapMidTransceiver.end())
 			MSC_THROW_ERROR("associated RtpTransceiver not found");
 
-		auto& transceiver = localIdIt->second;
+		auto transceiver = localIdIt->second;
 
 		MSC_DEBUG("disabling mid:%s", transceiver->mid().value().c_str());
 
@@ -818,7 +818,7 @@ namespace mediasoupclient
 		if (localIdIt == this->mapMidTransceiver.end())
 			MSC_THROW_ERROR("associated RtpTransceiver not found");
 
-		auto& transceiver = localIdIt->second;
+		auto transceiver = localIdIt->second;
 
 		// May throw.
 		auto stats = this->pc->GetStats(transceiver->receiver());
