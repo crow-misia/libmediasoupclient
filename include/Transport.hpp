@@ -131,7 +131,7 @@ namespace mediasoupclient
 	public:
 		Producer* Produce(
 		  Producer::Listener* producerListener,
-		  webrtc::MediaStreamTrackInterface* track,
+		  rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 		  const std::vector<webrtc::RtpEncodingParameters>* encodings,
 		  const nlohmann::json* codecOptions,
 		  const nlohmann::json* codec,
@@ -154,7 +154,7 @@ namespace mediasoupclient
 	public:
 		void OnClose(Producer* producer) override;
 		void OnClose(DataProducer* dataProducer) override;
-		void OnReplaceTrack(const Producer* producer, webrtc::MediaStreamTrackInterface* track) override;
+		void OnReplaceTrack(const Producer* producer, webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track) override;
 		void OnSetMaxSpatialLayer(const Producer* producer, uint8_t maxSpatialLayer) override;
 		nlohmann::json OnGetStats(const Producer* producer) override;
 

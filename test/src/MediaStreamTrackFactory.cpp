@@ -92,7 +92,7 @@ void MediaStreamTrackFactory::ReleaseThreads()
 }
 
 // Audio track creation.
-rtc::scoped_refptr<webrtc::AudioTrackInterface> createAudioTrack(const std::string& label)
+webrtc::scoped_refptr<webrtc::AudioTrackInterface> createAudioTrack(const std::string& label)
 {
 	MediaStreamTrackFactory& singleton = MediaStreamTrackFactory::getInstance();
 
@@ -106,7 +106,7 @@ rtc::scoped_refptr<webrtc::AudioTrackInterface> createAudioTrack(const std::stri
 }
 
 // Video track creation.
-rtc::scoped_refptr<webrtc::VideoTrackInterface> createVideoTrack(const std::string& label)
+webrtc::scoped_refptr<webrtc::VideoTrackInterface> createVideoTrack(const std::string& label)
 {
 	MediaStreamTrackFactory& singleton = MediaStreamTrackFactory::getInstance();
 

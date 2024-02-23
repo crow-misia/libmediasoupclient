@@ -86,7 +86,7 @@ namespace mediasoupclient
 		struct SendResult
 		{
 			std::string localId;
-			webrtc::RtpSenderInterface* rtpSender{ nullptr };
+			webrtc::scoped_refptr<webrtc::RtpSenderInterface> rtpSender{ nullptr };
 			nlohmann::json rtpParameters;
 		};
 
@@ -103,12 +103,12 @@ namespace mediasoupclient
 
 	public:
 		SendResult Send(
-		  webrtc::MediaStreamTrackInterface* track,
+		  rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 		  std::vector<webrtc::RtpEncodingParameters>* encodings,
 		  const nlohmann::json* codecOptions,
 		  const nlohmann::json* codec);
 		void StopSending(const std::string& localId);
-		void ReplaceTrack(const std::string& localId, webrtc::MediaStreamTrackInterface* track);
+		void ReplaceTrack(const std::string& localId, webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track);
 		void SetMaxSpatialLayer(const std::string& localId, uint8_t spatialLayer);
 		nlohmann::json GetSenderStats(const std::string& localId);
 		void RestartIce(const nlohmann::json& iceParameters) override;
@@ -128,8 +128,8 @@ namespace mediasoupclient
 		struct RecvResult
 		{
 			std::string localId;
-			webrtc::RtpReceiverInterface* rtpReceiver{ nullptr };
-			webrtc::MediaStreamTrackInterface* track{ nullptr };
+			webrtc::scoped_refptr<webrtc::RtpReceiverInterface> rtpReceiver{ nullptr };
+			webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track{ nullptr };
 		};
 
 	public:
